@@ -15,7 +15,7 @@ typedef enum
 {
     KY_040_PIN_A = 6, // Pico Pin GPIO6 -> CLK on KY-040
     KY_040_PIN_B = 7, // Pico Pin GPIO7 -> DT on KY-040
-    KY_040_PIN_SW = 8 // Pico Pin GPIO8 -> Marked SW on KY-040
+    KY_040_PIN_SW = 8 // Pico Pin GPIO8 -> SW on KY-040
 } tKy040Pin;
 
 static repeating_timer_t encoderTaskInterruptTimer;
