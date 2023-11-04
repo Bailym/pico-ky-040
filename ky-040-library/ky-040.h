@@ -15,4 +15,4 @@ bool Encoder_TaskInterruptWrapper(repeating_timer_t *rt);
 void SetEncoderPulsedCallback(void (*encoderPulsedCallback)(tEncoderDirection));
 void SetEncoderSwitchPressedCallback(void (*encoderSwitchPressedCallback)(void));
 
-#endif // KY_040_H
+#endif 

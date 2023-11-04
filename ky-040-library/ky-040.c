@@ -156,11 +156,6 @@ bool Encoder_TaskInterruptWrapper(repeating_timer_t *rt)
     return true;
 }
 
-static tEncoderDirection GetEncoderDirection(void)
-{
-    return currentEncoderDirection;
-}
-
 void SetEncoderPulsedCallback(void (*encoderPulsedCallback)(tEncoderDirection))
 {
     storedEncoderPulsedCallback = encoderPulsedCallback;
