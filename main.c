@@ -1,15 +1,17 @@
 #include "ky-040.h"
 #include <stdio.h>
 
+// EXAMPLE CODE USING THE LIBRARY
+
 void encoderPulsedCallback(tEncoderDirection direction)
 {
     if(direction == ENCODER_DIRECTION_CLOCKWISE)
     {
-        printf("Clockwise\n");
+        printf("Clockwise\n"); 
     }
     else if(direction == ENCODER_DIRECTION_COUNTERCLOCKWISE)
     {
-        printf("Counter Clockwise\n");
+        printf("Counter Clockwise\n"); 
     }
     else
     {
@@ -32,7 +34,7 @@ int main()
 
     while(1)
     {
-
+        // Do nothing - Registered callbacks will be called when encoder is pulsed or switch is pressed.
     }
 
     return 0;
