@@ -22,13 +22,14 @@ static repeating_timer_t encoderTaskInterruptTimer;
 static tGpioPinState lastStateA;
 static tGpioPinState lastStateB;
 static tGpioPinState lastStateSW;
-static tGpioPinState lastSyncedState;   // Last state where both pins were the same
-static tGpioPinState nextSyncedState;   // Next state where both pins will be the same
-static int currentEncoderPosition;  
-static int encoderPulses;               // The encoder pulses once for every 2 positions
-tEncoderDirection lastEncoderDirection; 
+static tGpioPinState lastSyncedState; // Last state where both pins were the same
+static tGpioPinState nextSyncedState; // Next state where both pins will be the same
+static int currentEncoderPosition;
+static int encoderPulses; // The encoder pulses once for every 2 positions
+static tEncoderDirection lastEncoderDirection;
 static tEncoderDirection currentEncoderDirection;
-static bool encoderSwitchPressed;
+static void (*storedEncoderPulsedCallback)(tEncoderDirection);
+static void (*storedEncoderSwitchPressedCallback)(void);
 
 static tGpioPinState GetEncoderPinState(tKy040Pin pin)
 {
@@ -51,7 +52,6 @@ void Encoder_Init(void)
     lastStateSW = GetEncoderPinState(KY_040_PIN_SW);
     lastSyncedState = GPIO_LOW;
     nextSyncedState = GPIO_HIGH;
-    encoderSwitchPressed = false;
     currentEncoderPosition = 0;
     encoderPulses = 0;
     currentEncoderDirection = ENCODER_DIRECTION_STOPPED;
@@ -72,7 +72,6 @@ static void UpdateEncoderPositionAndDirection()
         currentEncoderPosition--;
         lastEncoderDirection = ENCODER_DIRECTION_COUNTERCLOCKWISE;
     }
-    printf("Encoder position: %d\n", currentEncoderPosition);
 }
 
 static void UpdateEncoderPulses()
@@ -88,8 +87,11 @@ static void UpdateEncoderPulses()
 
     if (encoderPulses == 2)
     {
-        printf("Encoder pulsed: %d\n", lastEncoderDirection);
         encoderPulses = 0;
+        if (storedEncoderPulsedCallback != NULL)
+        {
+            storedEncoderPulsedCallback(lastEncoderDirection);
+        }
     }
 }
 
@@ -112,7 +114,7 @@ static void Encoder_Task(void)
     tGpioPinState currentStateB = GetEncoderPinState(KY_040_PIN_B);
     tGpioPinState currentStateSW = GetEncoderPinState(KY_040_PIN_SW);
 
-    encoderSwitchPressed = (currentStateSW == GPIO_LOW && lastStateSW == GPIO_HIGH);
+    bool encoderSwitchPressed = (currentStateSW == GPIO_LOW && lastStateSW == GPIO_HIGH);
     bool encoderMovingClockwise = (currentStateA == nextSyncedState && currentStateB == lastSyncedState);
     bool encoderMovingCounterClockwise = (currentStateB == nextSyncedState && currentStateA == lastSyncedState);
     bool encoderNotMoving = (currentStateA == lastSyncedState && currentStateB == lastSyncedState);
@@ -141,6 +143,11 @@ static void Encoder_Task(void)
     lastStateA = currentStateA;
     lastStateB = currentStateB;
     lastStateSW = currentStateSW;
+
+    if (encoderSwitchPressed && storedEncoderSwitchPressedCallback != NULL)
+    {
+        storedEncoderSwitchPressedCallback();
+    }
 }
 
 bool Encoder_TaskInterruptWrapper(repeating_timer_t *rt)
@@ -149,17 +156,17 @@ bool Encoder_TaskInterruptWrapper(repeating_timer_t *rt)
     return true;
 }
 
-tEncoderDirection GetEncoderDirection(void)
+static tEncoderDirection GetEncoderDirection(void)
 {
     return currentEncoderDirection;
 }
 
-bool GetEncoderSwitchPressed(void)
+void SetEncoderPulsedCallback(void (*encoderPulsedCallback)(tEncoderDirection))
 {
-    return encoderSwitchPressed;
+    storedEncoderPulsedCallback = encoderPulsedCallback;
 }
 
-int GetEncoderPosition(void)
+void SetEncoderSwitchPressedCallback(void (*encoderSwitchPressedCallback)(void))
 {
-    return currentEncoderPosition;
+    storedEncoderSwitchPressedCallback = encoderSwitchPressedCallback;
 }
