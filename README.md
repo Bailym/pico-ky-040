@@ -11,15 +11,18 @@ The position and direction are used to detect encoder pulses, which happen with 
 - Assignable callbacks to run each encoder pulse (click). 
 - The encoder is read on a repeating timer interrupt (10ms by default).
 
-
 # Setup
 
-The default GPIO pin setup is 
+The default GPIO pin setup is:
 
 Pico Pin GPIO6 -> CLK on KY-040
+
 Pico Pin GPIO7 -> DT on KY-040
+
 Pico Pin GPIO8 -> SW on KY-040
+
 Pico Pin GND -> GND on KY-040
+
 Pico Pin 3V3(OUT) -> + on KY-040
 
 [Data sheet for KY-040](https://www.handsontec.com/dataspecs/module/Rotary%20Encoder.pdf) 
