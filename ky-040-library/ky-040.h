@@ -12,8 +12,8 @@ typedef enum
 
 void Encoder_Init(void);
 bool Encoder_TaskInterruptWrapper(repeating_timer_t *rt);
-bool PrintEncoderPositionInterruptWrapper(repeating_timer_t *rt);
-tEncoderDirection GetAveragedEncoderDirection(void);
+tEncoderDirection GetEncoderDirection(void);
 bool GetEncoderSwitchPressed(void);
+int GetEncoderPosition(void);
 
 #endif // KY_040_H

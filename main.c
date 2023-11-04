@@ -8,9 +8,7 @@ int main()
 
     while(1)
     {
-        tEncoderDirection direction = GetAveragedEncoderDirection();
-        printf("Encoder direction: %d\n", direction); 
-        sleep_ms(10);
+        
     }
     
     return 0;
