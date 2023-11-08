@@ -1,8 +1,6 @@
 #include "ky-040.h"
 #include <stdio.h>
 
-// EXAMPLE CODE USING THE LIBRARY
-
 void encoderPulsedCallback(tEncoderDirection direction)
 {
     if(direction == ENCODER_DIRECTION_CLOCKWISE)
@@ -12,10 +10,6 @@ void encoderPulsedCallback(tEncoderDirection direction)
     else if(direction == ENCODER_DIRECTION_COUNTERCLOCKWISE)
     {
         printf("Counter Clockwise\n"); 
-    }
-    else
-    {
-        printf("Stopped\n");
     }
 }
 
@@ -29,6 +23,7 @@ int main()
     stdio_init_all();
     Encoder_Init();
 
+    // Register callbacks
     SetEncoderPulsedCallback(encoderPulsedCallback);
     SetEncoderSwitchPressedCallback(encoderSwitchPressedCallback);
 

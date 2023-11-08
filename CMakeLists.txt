@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.12) # Require CMake 3.12 or newer
 
 # Directory variables
+set(EXAMPLES_DIR examples/)
 set(K4-040_LIBRARY_DIR ky-040-library/)
 
 # Include the Pico SDK CMake configuration
@@ -17,7 +18,7 @@ pico_sdk_init()
 
 # Add executable target
 add_executable(PICO-KY-040_EXECUTABLE 
-    ${PROJECT_SOURCE_DIR}/main.c
+    ${EXAMPLES_DIR}/BasicExample.c
     ${K4-040_LIBRARY_DIR}/ky-040.c)
 
 # Directories to include in build
