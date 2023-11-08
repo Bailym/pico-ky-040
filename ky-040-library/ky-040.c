@@ -30,6 +30,7 @@ static tEncoderDirection lastEncoderDirection;
 static tEncoderDirection currentEncoderDirection;
 static void (*storedEncoderPulsedCallback)(tEncoderDirection);
 static void (*storedEncoderSwitchPressedCallback)(void);
+bool getEncoderReadingOnInterrupt = false;
 
 static tGpioPinState GetEncoderPinState(tKy040Pin pin)
 {
@@ -57,7 +58,7 @@ void Encoder_Init(void)
     currentEncoderDirection = ENCODER_DIRECTION_STOPPED;
     lastEncoderDirection = ENCODER_DIRECTION_STOPPED;
 
-    add_repeating_timer_ms(ENCODER_READ_INTERVAL_MS, Encoder_TaskInterruptWrapper, NULL, &encoderTaskInterruptTimer);
+    add_repeating_timer_ms(ENCODER_READ_INTERVAL_MS, Encoder_GetReadingOnNextInterrupt, NULL, &encoderTaskInterruptTimer);
 }
 
 static void UpdateEncoderPositionAndDirection()
@@ -108,8 +109,13 @@ static void UpdateEncoderCountAndSyncState()
     UpdateSyncedState();
 }
 
-static void Encoder_Task(void)
+void Encoder_Task(void)
 {
+    if (!getEncoderReadingOnInterrupt)
+    {
+        return;
+    }
+
     tGpioPinState currentStateA = GetEncoderPinState(KY_040_PIN_A);
     tGpioPinState currentStateB = GetEncoderPinState(KY_040_PIN_B);
     tGpioPinState currentStateSW = GetEncoderPinState(KY_040_PIN_SW);
@@ -150,10 +156,9 @@ static void Encoder_Task(void)
     }
 }
 
-bool Encoder_TaskInterruptWrapper(repeating_timer_t *rt)
+bool Encoder_GetReadingOnNextInterrupt(repeating_timer_t *rt)
 {
-    Encoder_Task();
-    return true;
+    getEncoderReadingOnInterrupt = true;
 }
 
 void SetEncoderPulsedCallback(void (*encoderPulsedCallback)(tEncoderDirection))

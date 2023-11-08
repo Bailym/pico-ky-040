@@ -29,7 +29,7 @@ int main()
 
     while(1)
     {
-        // Do nothing - Registered callbacks will be called when encoder is pulsed or switch is pressed.
+        Encoder_Task();
     }
 
     return 0;

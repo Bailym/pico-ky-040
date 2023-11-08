@@ -11,7 +11,8 @@ typedef enum
 } tEncoderDirection;
 
 void Encoder_Init(void);
-bool Encoder_TaskInterruptWrapper(repeating_timer_t *rt);
+void Encoder_Task(void);
+bool Encoder_GetReadingOnNextInterrupt(repeating_timer_t *rt);
 void SetEncoderPulsedCallback(void (*encoderPulsedCallback)(tEncoderDirection));
 void SetEncoderSwitchPressedCallback(void (*encoderSwitchPressedCallback)(void));
 
